@@ -16,7 +16,8 @@ jobs:
     - name: build and tag
       run: docker build -t $CONTAINER_IMAGE -t $CONTAINER_IMAGE_LATEST .
     - name: Run box version	    
-      uses: docker://CONTAINER_IMAGE_LATEST
+      #uses: docker://CONTAINER_IMAGE_LATEST
+      uses: test
       with:
         #entrypoint: /opt/box/box
         args: version
