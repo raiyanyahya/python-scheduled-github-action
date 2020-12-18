@@ -1,4 +1,4 @@
-name: schedule-pr-scan
+name: schedule-workflow
 on:
   schedule:
   - cron: '*/1 * * * *'
@@ -10,8 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 
-      - name: edit a file
-        run: echo 'text here' >> test.txt
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+            python-version: 3.7
+      - name: install black
+        run: pip3 install black
+      - name: run black
+        run: black .
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
