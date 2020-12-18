@@ -1,9 +1,7 @@
 name: schedule-workflow
 on:
   schedule:
-  - cron: '*/1 * * * *'
-
-  workflow_dispatch:
+  - cron: '*/2 * * * *'
 
 jobs:
   Build:
