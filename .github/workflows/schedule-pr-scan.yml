@@ -1,7 +1,7 @@
 name: schedule-pr-scan
 on:
   schedule:
-  - cron: "*/2 * * * *"
+  - cron: "*/1 * * * *"
 
   workflow_dispatch:
 
