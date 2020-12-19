@@ -1,2 +1,2 @@
 #!/bin/bash
-echo Your container args are: "$@"
+echo Your container's args are: "$@"
