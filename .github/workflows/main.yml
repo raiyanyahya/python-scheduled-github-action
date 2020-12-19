@@ -1,23 +1,29 @@
-name: CI
- 
+name: build-push-image
+
 on:
   push:
-    branches: [ main ]
-
+    branches:
+      - main
   workflow_dispatch:
 env:
-    CONTAINER_IMAGE: docker.pkg.github.com/${{github.repository}}/test:${{github.sha}}
-    CONTAINER_IMAGE_LATEST: docker.pkg.github.com/${{github.repository}}/test:latest
+    CONTAINER_IMAGE: docker.pkg.github.com/${{github.repository}}/simple:${{github.sha}}
+    CONTAINER_IMAGE_LATEST: docker.pkg.github.com/${{github.repository}}/simple:latest
+
 jobs:
-  docker-example:
+  build-tag-push:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: build and tag
-      run: docker build -t $CONTAINER_IMAGE -t $CONTAINER_IMAGE_LATEST .
-    - name: Run box version	    
-      #uses: docker://CONTAINER_IMAGE_LATEST
-      uses: test
-      with:
-        #entrypoint: /opt/box/box
-        args: version
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: login
+        run: docker login -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}} docker.pkg.github.com
+        
+      - name: build and tag
+        run: docker build -t $CONTAINER_IMAGE -t $CONTAINER_IMAGE_LATEST .
+        
+      - name: push to github packages
+        if: contains(github.event.head_commit.message, '[release]') == true && github.event_name == 'push'
+        run: |
+             docker push $CONTAINER_IMAGE
+             docker push $CONTAINER_IMAGE_LATEST
